@@ -22,9 +22,9 @@ export default class OseDataModelCharacterEncumbranceItemBased
   };
 
   static equippedEncumbranceSteps = {
-    oneThird: 33.33,
-    fiveNinths: 55.55,
-    sevenNinths: 77.77,
+    oneThird: 34,
+    fiveNinths: 56,
+    sevenNinths: 78,
   };
 
   #equippedMax;
@@ -125,19 +125,19 @@ export default class OseDataModelCharacterEncumbranceItemBased
           100);
 
     this.#atOneThird =
-      this.#weight >
+      this.#weight - this.#weightMod >
       this.#max *
         (OseDataModelCharacterEncumbranceItemBased.equippedEncumbranceSteps
           .oneThird /
           100);
     this.#atFiveNinths =
-      this.#weight >
+      this.#weight - this.#weightMod >
       this.#max *
         (OseDataModelCharacterEncumbranceItemBased.equippedEncumbranceSteps
           .fiveNinths /
           100);
     this.#atSevenNinths =
-      this.#weight >
+      this.#weight - this.#weightMod >
       this.#max *
         (OseDataModelCharacterEncumbranceItemBased.equippedEncumbranceSteps
           .sevenNinths /
@@ -168,7 +168,7 @@ export default class OseDataModelCharacterEncumbranceItemBased
   }
 
   get equippedPct() {
-    return Math.clamp((100 * this.#equippedWeight) / this.#equippedMax, 0, 100);
+    return Math.clamp((100 * (this.#equippedWeight - this.#weightMod)) / this.#equippedMax, 0, 100);
   }
 
   get packedPct() {
@@ -176,7 +176,7 @@ export default class OseDataModelCharacterEncumbranceItemBased
   }
 
   get equippedLabel() : string {
-    return this.#equippedWeight + "/" + this.#equippedMax;
+    return this.#equippedWeight + "/" + (this.#equippedMax + this.#weightMod);
   }
 
   get packedLabel() : string {
@@ -192,7 +192,7 @@ export default class OseDataModelCharacterEncumbranceItemBased
       OseDataModelCharacterEncumbranceItemBased.packedEncumbranceSteps
     );
     let equippedIndex = equippedValues.findIndex(
-      (step) => step > (this.#equippedWeight / this.#equippedMax) * 100
+      (step) => step > ((this.#equippedWeight - this.#weightMod) / this.#equippedMax) * 100
     );
     equippedIndex = equippedIndex === -1 ? 4 : equippedIndex;
 
@@ -200,7 +200,7 @@ export default class OseDataModelCharacterEncumbranceItemBased
       (step) =>
         step >
         ((this.#packedWeight - this.#weightMod) /
-          (this.#packedMax + this.#weightMod)) *
+          this.#packedMax) *
           100
     );
     packedIndex = packedIndex === -1 ? 4 : packedIndex;
