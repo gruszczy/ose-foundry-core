@@ -49,6 +49,11 @@ export class OSECombat extends Combat {
       default:
         break;
     }
+    console.log("On end round")
+    for (let c of this.combatants) {
+      await c.setFlag(game.system.id, "prepareSpell", false);
+      await c.setFlag(game.system.id, "moveInCombat", false);
+    }
     // @ts-expect-error - This method exists, but the types package doesn't have it
     await super._onEndRound();
     await this.activateCombatant(0)
